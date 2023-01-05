@@ -34,7 +34,7 @@ async def pick_cats(breed: str):
     return {"breed": breed}    
 
 
-@app.post("/")
+@app.post("/{cat_breed}")
 async def create_cat(cat_breed, cat_size):
     current_cat_id = 0
 
@@ -49,9 +49,16 @@ async def create_cat(cat_breed, cat_size):
 
 
 
-#@app.get("/")
-
+@app.put("/{cat_breed}")
 async def update_cats(cat_breed: str , cat_size: str , cat_energy: str):
     cat_information = {'breed': cat_breed, 'size': cat_size, 'energy': cat_energy}
     CATS[cat_breed] = cat_information
     return cat_information
+
+@app.delete("/{cat_breed}")
+async def delete_cat(cat_breed):
+    del CATS[cat_breed]
+    return f'Cat_{cat_breed} deleted'
+
+
+    
