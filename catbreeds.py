@@ -46,3 +46,12 @@ async def create_cat(cat_breed, cat_size):
 
     CATS[f'cat_{current_cat_id + 1}'] = {'breed': cat_breed, 'size': cat_size}
     return CATS[f'cat_{current_cat_id + 1}']
+
+
+
+#@app.get("/")
+
+async def update_cats(cat_breed: str , cat_size: str , cat_energy: str):
+    cat_information = {'breed': cat_breed, 'size': cat_size, 'energy': cat_energy}
+    CATS[cat_breed] = cat_information
+    return cat_information
