@@ -73,7 +73,11 @@ async def delete_cat(cat_id: UUID):
         if x.id == cat_id:
             del CATS[counter - 1]
             return f'ID:{cat_id} deleted'
-    raise HTTPException(status_code= 404 , detail= 'Cat not in the list')   
+    raise HTTPException(status_code= 404 , detail= 'Cat not in the list', 
+                        headers= {
+                            "X-Header-Error":
+                            "Nothing can be seen at that UUID"
+                        })   
 
 
 def create_cat_no_api():
