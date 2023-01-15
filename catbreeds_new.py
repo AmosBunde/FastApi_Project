@@ -1,7 +1,16 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request
 from pydantic import BaseModel, Field
 from typing import Optional
 from uuid import UUID
+from starlette.responses import JSONResponse
+
+
+class NegativeNumberException(Exception):
+    def __init__(self, cats_to_return):
+        self.cats_to_return = cats_to_return
+
+
+
 
 app = FastAPI()
 
@@ -29,8 +38,18 @@ class Cat(BaseModel):
 
 CATS = []
 
+@app.exception_handler(NegativeNumberException)
+async def negative_number_exception_handler(request: Request, exception: NegativeNumberException):
+    return JSONResponse(
+        status_code=420,
+        content= "message" : f" Hi, why do you need cats to be negative {exception.cats_to_return}"
+    )
+
+
 @app.get("/")
 async def read_all_cats(cats_to_return: Optional[int] = None):
+    if cats_to_return < 0:
+        raise NegativeNumberException(cats_to_return= cats_to_return)
     if len(CATS) < 1:
         create_cat_no_api()
     if cats_to_return and len(CATS) >= cats_to_return > 0:
