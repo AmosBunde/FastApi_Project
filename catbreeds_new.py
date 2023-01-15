@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel, Field
 from typing import Optional
 from uuid import UUID
@@ -73,6 +73,8 @@ async def delete_cat(cat_id: UUID):
         if x.id == cat_id:
             del CATS[counter - 1]
             return f'ID:{cat_id} deleted'
+    raise HTTPException(status_code= 404 , detail= 'Cat not in the list')   
+
 
 def create_cat_no_api():
     cat_01 = Cat(id= "4c48bb44-ab5a-41dc-b9bc-3b7d4adcd6ce",
