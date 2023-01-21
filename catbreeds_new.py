@@ -24,7 +24,10 @@ class Cat(BaseModel):
     description: Optional[str] = Field(breed = "Description of the cat",
                                        max_length= 100)
 
-    
+
+    rating: int = Field(gt= -2, lt= 101)
+
+
     class Config:
         schema_extra ={
             "example": {
@@ -35,6 +38,17 @@ class Cat(BaseModel):
                 "shedding": "Heavy"
             }
         }
+
+class CatsWithoutRatings(BaseModel):
+    id ; UUID
+    breed: str = Field(min_length =1)
+    size: str
+    energy: str
+    shedding: str
+    description: Optional[str] = Field(breed = "Description of the cat",
+                                       max_length= 100)
+
+
 
 CATS = []
 
@@ -67,6 +81,14 @@ async def read_cat(cat_id: UUID):
     for x in CATS:
         if x.id == cat_id:
             return x
+        raise raise_cat_cannot_be_found_exception
+
+@app.get("/cat/rating/{cat_id}", response_model= CatsWithoutRatings)
+async def read_cat_no_ratings(cat_id: UUID):
+    for x in CATS:
+        if x.id == cat_id:
+            return x
+        raise raise_cat_cannot_be_found_exception
 
 @app.post("/")
 async def create_cat(cat: Cat):
